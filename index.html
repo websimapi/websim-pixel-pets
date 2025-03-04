@@ -1,0 +1,215 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Pets</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "petjs": "./js/pet.js",
+            "gamejs": "./js/game-manager.js",
+            "shopjs": "./js/shop.js",
+            "inventoryjs": "./js/inventory.js",
+            "minigamesjs": "./js/minigames.js",
+            "uijs": "./js/ui-manager.js"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div id="game-container">
+        <div id="welcome-screen" class="screen">
+            <h1>Pixel Pets</h1>
+            <div id="pet-selection">
+                <h2>Choose Your Pet</h2>
+                <div class="pet-options">
+                    <div class="pet-option" data-type="cat">
+                        <svg class="pet-preview" viewBox="0 0 100 100"></svg>
+                        <h3>Cat</h3>
+                        <p>Special: Nine Lives - Recover from sickness faster</p>
+                    </div>
+                    <div class="pet-option" data-type="dog">
+                        <svg class="pet-preview" viewBox="0 0 100 100"></svg>
+                        <h3>Dog</h3>
+                        <p>Special: Loyalty Boost - Gain more happiness</p>
+                    </div>
+                    <div class="pet-option" data-type="bird">
+                        <svg class="pet-preview" viewBox="0 0 100 100"></svg>
+                        <h3>Bird</h3>
+                        <p>Special: Energy Flight - Restore energy faster</p>
+                    </div>
+                    <div class="pet-option" data-type="rabbit">
+                        <svg class="pet-preview" viewBox="0 0 100 100"></svg>
+                        <h3>Rabbit</h3>
+                        <p>Special: Rapid Growth - Gain XP faster</p>
+                    </div>
+                </div>
+                <div class="name-input">
+                    <label for="pet-name">Name your pet:</label>
+                    <input type="text" id="pet-name" maxlength="12" placeholder="Enter a name">
+                </div>
+                <button id="start-game">Start Game</button>
+            </div>
+        </div>
+
+        <div id="main-screen" class="screen hidden">
+            <div class="top-bar">
+                <div class="pet-info">
+                    <h2 id="pet-name-display">Pet Name</h2>
+                    <div class="pet-level">
+                        <span>Lvl <span id="pet-level">1</span></span>
+                        <div class="xp-bar">
+                            <div id="xp-fill"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="currency">
+                    <span id="coin-amount">0</span>
+                    <svg class="coin-icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" fill="gold" stroke="#b88700" stroke-width="1"/>
+                        <circle cx="12" cy="12" r="7" fill="#ffd700" stroke="#b88700" stroke-width="0.5"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="pet-display">
+                <div id="pet-status-indicators">
+                    <div id="sick-indicator" class="status-indicator hidden">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L2 12h3v10h14V12h3L12 2z" fill="red"/>
+                        </svg>
+                    </div>
+                    <div id="dirty-indicator" class="status-indicator hidden">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" fill="brown"/>
+                        </svg>
+                    </div>
+                </div>
+                <div id="pet-area">
+                    <svg id="pet-svg" viewBox="0 0 200 200"></svg>
+                </div>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-bar">
+                    <span class="stat-label">Hunger</span>
+                    <div class="stat-progress">
+                        <div id="hunger-fill" class="stat-fill"></div>
+                    </div>
+                </div>
+                <div class="stat-bar">
+                    <span class="stat-label">Energy</span>
+                    <div class="stat-progress">
+                        <div id="energy-fill" class="stat-fill"></div>
+                    </div>
+                </div>
+                <div class="stat-bar">
+                    <span class="stat-label">Happiness</span>
+                    <div class="stat-progress">
+                        <div id="happiness-fill" class="stat-fill"></div>
+                    </div>
+                </div>
+                <div class="stat-bar">
+                    <span class="stat-label">Health</span>
+                    <div class="stat-progress">
+                        <div id="health-fill" class="stat-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="feed-btn" class="action-btn">Feed</button>
+                <button id="play-btn" class="action-btn">Play</button>
+                <button id="sleep-btn" class="action-btn">Sleep</button>
+                <button id="clean-btn" class="action-btn">Clean</button>
+                <button id="heal-btn" class="action-btn">Heal</button>
+                <button id="train-btn" class="action-btn">Train</button>
+            </div>
+
+            <div class="game-navigation">
+                <button id="shop-btn" class="nav-btn">Shop</button>
+                <button id="inventory-btn" class="nav-btn">Inventory</button>
+                <button id="minigames-btn" class="nav-btn">Mini Games</button>
+            </div>
+
+            <div id="notification-area"></div>
+        </div>
+
+        <div id="shop-screen" class="screen hidden">
+            <div class="screen-header">
+                <h2>Shop</h2>
+                <div class="currency">
+                    <span id="shop-coin-amount">0</span>
+                    <svg class="coin-icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" fill="gold" stroke="#b88700" stroke-width="1"/>
+                        <circle cx="12" cy="12" r="7" fill="#ffd700" stroke="#b88700" stroke-width="0.5"/>
+                    </svg>
+                </div>
+                <button id="back-from-shop" class="back-btn">Back</button>
+            </div>
+            <div class="shop-items">
+                <!-- Shop items will be dynamically generated here -->
+            </div>
+        </div>
+
+        <div id="inventory-screen" class="screen hidden">
+            <div class="screen-header">
+                <h2>Inventory</h2>
+                <button id="back-from-inventory" class="back-btn">Back</button>
+            </div>
+            <div class="inventory-items">
+                <!-- Inventory items will be dynamically generated here -->
+            </div>
+        </div>
+
+        <div id="minigames-screen" class="screen hidden">
+            <div class="screen-header">
+                <h2>Mini Games</h2>
+                <button id="back-from-minigames" class="back-btn">Back</button>
+            </div>
+            <div class="minigame-selection">
+                <div class="minigame-option" data-game="quick-catch">
+                    <h3>Quick Catch</h3>
+                    <p>Test your reflexes by clicking on your pet when it appears!</p>
+                    <button class="play-minigame-btn" data-game="quick-catch">Play</button>
+                </div>
+                <div class="minigame-option" data-game="memory-match">
+                    <h3>Memory Match</h3>
+                    <p>Match pairs of pet treats to win rewards!</p>
+                    <button class="play-minigame-btn" data-game="memory-match">Play</button>
+                </div>
+                <div class="minigame-option" data-game="balloon-pop">
+                    <h3>Balloon Pop</h3>
+                    <p>Pop as many balloons as you can before time runs out!</p>
+                    <button class="play-minigame-btn" data-game="balloon-pop">Play</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="minigame-play-screen" class="screen hidden">
+            <div class="screen-header">
+                <h2 id="minigame-title">Mini Game</h2>
+                <button id="back-from-minigame-play" class="back-btn">Exit Game</button>
+            </div>
+            <div id="minigame-area">
+                <!-- Minigame content will go here -->
+            </div>
+            <div id="minigame-controls">
+                <button id="minigame-start">Start Game</button>
+                <div id="minigame-score">Score: <span>0</span></div>
+                <div id="minigame-timer">Time: <span>0</span></div>
+            </div>
+        </div>
+
+        <div id="game-over-screen" class="screen hidden">
+            <h2>Game Over</h2>
+            <p>Your pet's health has dropped to zero!</p>
+            <button id="new-game-btn">Start New Game</button>
+        </div>
+    </div>
+    
+    <script type="module" src="js/main.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
